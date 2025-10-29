@@ -28,7 +28,7 @@ export function Header() {
           <Link href="/" className="flex items-center gap-2">
             <div className="text-2xl font-bold">
               <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                MyDiploma
+                Mydiploma
               </span>
             </div>
           </Link>
@@ -39,17 +39,22 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium  dark:text-white hover:text-accent transition-colors"
+                className="
+                  text-sm font-medium 
+                text-gray-800 dark:text-white 
+                hover:text-primary dark:hover:text-accent 
+                  transition-colors duration-200"
               >
                 {item.label}
               </Link>
             ))}
           </nav>
 
+
           {/* Actions */}
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
-            <ThemeSwitcher />
+            {/* <ThemeSwitcher /> */}
 
             {/* Mobile Menu Button */}
             <Button

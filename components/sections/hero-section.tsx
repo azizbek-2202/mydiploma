@@ -11,6 +11,7 @@ import Link from "next/link"
 export function HeroSection() {
   const { t } = useLanguage()
 
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-bg">
       <FloatingElements />
@@ -34,10 +35,12 @@ export function HeroSection() {
               <span className="text-sm font-medium text-primary">{t.home.hero.badge}</span>
             </motion.div>
 
-            <h1 className="text-5xl dark:text-white md:text-7xl font-bold leading-tight">
-              <span className="text-foreground">{t.home.hero.title.split(" ").slice(0, 3).join(" ")}</span>
+            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+              <span className="text-foreground dark:text-white">
+                {t.home.hero.title.split(" ").slice(0, 3).join(" ")}
+              </span>
               <br />
-              <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-primary dark:via-secondary dark:to-accent">
                 {t.home.hero.title.split(" ").slice(3).join(" ")}
               </span>
             </h1>

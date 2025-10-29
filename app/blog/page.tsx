@@ -31,7 +31,7 @@ export default function BlogPage() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center space-y-6"
           >
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-balance">
+            <h1 className="text-5xl dark:text-white md:text-7xl font-bold mb-6 text-balance">
               Insights & <span className="text-primary">Resources</span>
             </h1>
 

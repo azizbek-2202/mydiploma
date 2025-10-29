@@ -6,10 +6,10 @@ import { useRef } from "react"
 import Image from "next/image"
 
 const partners = [
-  { name: "Harvard University", logo: "/harvard-university-campus.jpg" },
-  { name: "Oxford University", logo: "/oxford-university-campus.jpg" },
-  { name: "University of Toronto", logo: "/toronto-university-campus.jpg" },
-  { name: "University of Melbourne", logo: "/melbourne-university-campus.jpg" },
+  { name: "Harvard University", logo: "/harvard-university-campus.webp" },
+  { name: "Oxford University", logo: "/oxford-university-campus.webp" },
+  { name: "University of Toronto", logo: "/toronto-university-campus.webp" },
+  { name: "University of Melbourne", logo: "/melbourne-university-campus.png" },
   { name: "ETH Zurich", logo: "/eth-zurich-campus.jpg" },
   { name: "NUS Singapore", logo: "/nus-singapore-campus.jpg" },
 ]
@@ -39,7 +39,7 @@ export function PartnersSection() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: index * 0.1, duration: 0.5 }}
-              className="group"
+              className="group cursor-pointer"
             >
               <div className="relative aspect-square rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
                 <Image

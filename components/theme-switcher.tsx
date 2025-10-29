@@ -31,7 +31,7 @@ export function ThemeSwitcher() {
           {isDark ? (
             <Moon className="h-5 w-5 text-white transition-all" />
           ) : (
-            <Sun className="h-5 w-5 transition-all" />
+            <Sun className="h-5 w-5 dark:text-white transition-all" />
           )}
           <span className="sr-only">Toggle theme</span>
         </Button>

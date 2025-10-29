@@ -11,7 +11,7 @@ export function WelcomeAnimation() {
 
   // Hide animation after 3 seconds
   useEffect(() => {
-    const timer = setTimeout(() => setShow(false), 3000)
+    const timer = setTimeout(() => setShow(false), 2000)
     return () => clearTimeout(timer)
   }, [])
 
