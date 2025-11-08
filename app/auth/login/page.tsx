@@ -48,7 +48,7 @@ export default function LoginPage() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              MyDiploma
+              Mydiploma
             </h1>
             <p className="text-gray-600">Admin Login</p>
           </div>

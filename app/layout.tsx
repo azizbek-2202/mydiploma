@@ -5,7 +5,6 @@ import "./globals.css"
 import { LanguageProvider } from "@/contexts/language-context"
 import { ThemeProvider } from "@/contexts/theme-context"
 import { AuthProvider } from "@/contexts/auth-context"
-import { EnhancedBackground } from "@/components/3d/enhanced-background"
 import { LayoutWrapper } from "@/components/layout-wrapper"
 
 const geistSans = Geist({
