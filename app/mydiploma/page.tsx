@@ -17,15 +17,15 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 -my-16">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+        <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              MyDiploma Admin
+              Mydiploma Admin
             </h1>
-            <p className="text-gray-600 text-sm mt-1">Logged in as {user?.email}</p>
+            <p className="text-gray-600 text-sm mt-1">Logged in as {user}</p>
           </div>
           <Button onClick={handleLogout} variant="outline" className="gap-2 bg-transparent">
             <LogOut className="w-4 h-4" />

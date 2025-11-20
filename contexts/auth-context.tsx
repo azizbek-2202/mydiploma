@@ -1,56 +1,58 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-
-export interface AuthUser {
-  id: string
-  email: string
-}
+import { createContext, useContext, useState, useEffect, ReactNode } from "react"
 
 interface AuthContextType {
-  user: AuthUser | null
-  isLoading: boolean
-  login: (email: string) => void
-  logout: () => void
+  user: string | null
+  token: string | null
   isAuthenticated: boolean
+  isLoading: boolean
+  login: (email: string, token: string) => void
+  logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null)
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<string | null>(null)
+  const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("mydiploma_current_user")
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
+    const storedToken = localStorage.getItem("auth_token")
+    const storedUser = localStorage.getItem("auth_user")
+    if (storedToken && storedUser) {
+      setToken(storedToken)
+      setUser(storedUser)
     }
     setIsLoading(false)
   }, [])
 
-  const login = (email: string) => {
-    const newUser: AuthUser = { id: Date.now().toString(), email }
-    setUser(newUser)
-    localStorage.setItem("mydiploma_current_user", JSON.stringify(newUser))
+  const login = (email: string, token: string) => {
+    setUser(email)
+    setToken(token)
+    localStorage.setItem("auth_user", email)
+    localStorage.setItem("auth_token", token)
   }
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem("mydiploma_current_user")
+    setToken(null)
+    localStorage.removeItem("auth_user")
+    localStorage.removeItem("auth_token")
   }
 
+  const isAuthenticated = !!token
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider")
-  }
+  if (!context) throw new Error("useAuth must be used within AuthProvider")
   return context
 }

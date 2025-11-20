@@ -5,12 +5,13 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
-import { saveUser, userExists } from "@/lib/auth-utils"
+import { userExists } from "@/lib/auth-utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { registerUser } from "@/lib/api-user"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -20,10 +21,13 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState("")
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+
+  const Verification = (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
     setIsLoading(true)
 
     if (password !== confirmPassword) {
@@ -32,8 +36,8 @@ export default function RegisterPage() {
       return
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters")
+    if (password.length < 4) {
+      setError("Password must be at least 4 characters")
       setIsLoading(false)
       return
     }
@@ -43,15 +47,23 @@ export default function RegisterPage() {
       setIsLoading(false)
       return
     }
-
-    try {
-      saveUser({ email, password })
-      login(email)
-      router.push("/mydiploma")
-    } catch (err) {
-      setError("Registration failed")
-    }
     setIsLoading(false)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!setLoading) {
+      alert("Iltimos formani to'ldiring")
+    }
+    setLoading(true)
+    try {
+      await registerUser({ email, password })
+      setMessage("Foydalanuvchi muvaffaqiyatli ro‘yxatdan o‘tdi ✅")
+    } catch (err) {
+      setMessage("Xatolik: foydalanuvchini yaratib bo‘lmadi ❌")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

@@ -1,43 +1,68 @@
-// Configurable API base URL - change this single value to switch between environments
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://161.35.204.26:3000/api",
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://138.68.93.19:3000/",
   ENDPOINTS: {
-    PROGRAMS: "/dasturlar",
-    GALLERY: "/gallareya",
-    POSTS: "/posts",
-    PROGRAM_INFO: "/dastur-malumotlari",
+    PROGRAMS: "dasturlar",
+    GALLERY: "gallareya",
+    POSTS: "blog", // ← bu o‘zgardi
+    PROGRAM_INFO: "dastur-malumotlari",
   },
 }
-
-export const buildUrl = (endpoint: string, id?: string | number) => {
+// ✅ lang (yoki boshqa query param) qo‘llaydigan buildUrl
+export const buildUrl = (endpoint: string, id?: string | number, params?: Record<string, string>) => {
   const baseEndpoint = API_CONFIG.ENDPOINTS[endpoint as keyof typeof API_CONFIG.ENDPOINTS] || endpoint
-  return id ? `${API_CONFIG.BASE_URL}${baseEndpoint}/${id}` : `${API_CONFIG.BASE_URL}${baseEndpoint}`
+  let url = id ? `${API_CONFIG.BASE_URL}${baseEndpoint}/${id}` : `${API_CONFIG.BASE_URL}${baseEndpoint}`
+
+  if (params) {
+    const query = new URLSearchParams(params).toString()
+    url += `?${query}`
+  }
+
+  return url
 }
 
 export const apiCall = async (
   method: "GET" | "POST" | "PATCH" | "DELETE",
   endpoint: string,
   id?: string | number,
-  body?: Record<string, any>,
+  body?: any,
+  params?: Record<string, string>,
+  isFormData?: boolean
 ) => {
-  const url = buildUrl(endpoint, id)
+  const url = buildUrl(endpoint, id, params)
+
+  // ✅ faqat browserda token olish
+  let token: string | null = null
+  if (typeof window !== "undefined") {
+    token = localStorage.getItem("auth_token")
+  }
+
+  const headers: HeadersInit = {
+    ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+  }
+
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json"
+  }
+
   const options: RequestInit = {
     method,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
   }
 
   if (body) {
-    options.body = JSON.stringify(body)
+    options.body = isFormData ? body : JSON.stringify(body)
   }
 
   try {
     const response = await fetch(url, options)
+console.log("REQUEST URL:", url)
+
     if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`)
+      throw new Error(`API Error: ${response.status} ${response.statusText}`)
     }
-    return await response.json()
+
+    const text = await response.text()
+    return text ? JSON.parse(text) : null
   } catch (error) {
     console.error(`[API] Error calling ${endpoint}:`, error)
     throw error

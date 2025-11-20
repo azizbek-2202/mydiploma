@@ -7,7 +7,7 @@ import { EnhancedBackground } from "@/components/3d/enhanced-background"
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
-    const hideLayout = pathname === "/mydiploma"
+    const hideLayout = pathname ==="/mydiploma/"
 
     return (
         <div className="relative">

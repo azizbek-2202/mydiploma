@@ -3,19 +3,16 @@ import { apiCall } from "./api-config"
 export interface BlogPost {
   id?: string
   date?: string
-  time?: string
-  translations?: Array<{
+  image?: File | string
+  translations: Array<{
     language: string
-    name?: string
-    davomiyligini?: string
-    level?: string
-    darajalar?: string
-    daraja?: string
-    yonalishi?: string
+    title: string
+    desc: string
   }>
 }
 
-export const fetchBlogPosts = async () => {
+// Barcha postlarni olish
+export const fetchBlogPosts = async (): Promise<BlogPost[]> => {
   try {
     return await apiCall("GET", "POSTS")
   } catch (error) {
@@ -24,7 +21,8 @@ export const fetchBlogPosts = async () => {
   }
 }
 
-export const fetchBlogPostById = async (id: string) => {
+// ID bo‘yicha post olish
+export const fetchBlogPostById = async (id: string): Promise<BlogPost | null> => {
   try {
     return await apiCall("GET", "POSTS", id)
   } catch (error) {
@@ -33,16 +31,18 @@ export const fetchBlogPostById = async (id: string) => {
   }
 }
 
-export const createBlogPost = async (data: BlogPost) => {
+// Yangi post yaratish (FormData bilan)
+export const createBlogPost = async (data: FormData) => {
   try {
-    return await apiCall("POST", "POSTS", undefined, data)
+    return await apiCall("POST", "POSTS", undefined, data, undefined, true)
   } catch (error) {
     console.error("[API] Failed to create blog post:", error)
     throw error
   }
 }
 
-export const updateBlogPost = async (id: string, data: BlogPost) => {
+// Postni yangilash (FormData bilan)
+export const updateBlogPost = async (id: string, data: FormData) => {
   try {
     return await apiCall("PATCH", "POSTS", id, data)
   } catch (error) {
@@ -51,6 +51,7 @@ export const updateBlogPost = async (id: string, data: BlogPost) => {
   }
 }
 
+// Postni o‘chirish
 export const deleteBlogPost = async (id: string) => {
   try {
     return await apiCall("DELETE", "POSTS", id)

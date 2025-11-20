@@ -1,33 +1,31 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import type { BlogPost } from "@/lib/blog-data"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-export function BlogPostClient({ post }: { post: BlogPost }) {
-  const [readProgress, setReadProgress] = useState(0)
+export function BlogPostClient() {
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const windowHeight = window.innerHeight
-      const documentHeight = document.documentElement.scrollHeight
-      const scrollTop = window.scrollY
-      const progress = (scrollTop / (documentHeight - windowHeight)) * 100
-      setReadProgress(Math.min(progress, 100))
-    }
+    const onScroll = () => {
+      const scrollTop = window.scrollY;
+      const scrollHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      setProgress(Math.min(scrolled, 100));
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div className="fixed top-16 left-0 right-0 h-1 bg-muted z-50">
       <motion.div
         className="h-full bg-primary"
-        style={{ width: `${readProgress}%` }}
-        initial={{ width: 0 }}
-        animate={{ width: `${readProgress}%` }}
+        animate={{ width: `${progress}%` }}
+        transition={{ ease: "linear", duration: 0.1 }}
       />
     </div>
-  )
+  );
 }

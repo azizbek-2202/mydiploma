@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react"
 import { getBlogPosts, deleteBlogPost } from "@/lib/blog-store"
 import type { BlogPost } from "@/lib/blog-store"
-import { BlogForm } from "@/components/admin/blog-form"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { Trash2, Edit2, Plus, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import BlogForm from "@/components/admin/blog-form"
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([])
