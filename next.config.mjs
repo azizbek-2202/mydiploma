@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export", // 👉 saytni to‘liq statik faylga aylantiradi
+  // output: undefined, // 👉 saytni to‘liq statik faylga aylantiradi
+  output: 'export',
   typescript: {
     ignoreBuildErrors: true,
   },

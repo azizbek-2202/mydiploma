@@ -1,32 +1,33 @@
-"use client"
+"use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
-import { fetchPrograms, fetchProgramById } from "@/lib/api-programs";
+import { fetchProgramById } from "@/lib/api-programs";
 
-// STATIC PARAMS
-export async function generateStaticParams() {
-    const programs = await fetchPrograms();
+export default function ProgramDetailsClient({ id }: { id: string }) {
+    const router = useRouter();
+    const [program, setProgram] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-    return programs
-        .filter((p) => p.id)
-        .map((p) => ({ id: String(p.id) }));
-}
+    useEffect(() => {
+        async function loadProgram() {
+            const locale = localStorage.getItem("locale") || "uz";
+            const data = await fetchProgramById(id, locale);
+            setProgram(data);
+            setLoading(false);
+        }
 
-interface Props {
-    params: { id: string };
-}
+        loadProgram();
+    }, [id]);
 
-export default async function ProgramDetailsPage({ params }: Props) {
-    const { id } = params;
-    const program: any = await fetchProgramById(id);
-    if (!program) return <div>Program Not Found</div>;
+    if (loading) return <div>Loading...</div>;
+    if (!program) return <div>Program not found</div>;
 
-    // Backendda translation mavjud
     const translation = program.translation || program.translations?.[0];
-
     const title = translation?.nomi || "Untitled";
     const content = translation?.desc || "";
     const category = translation?.yonalishi || "General";
@@ -41,26 +42,28 @@ export default async function ProgramDetailsPage({ params }: Props) {
 
     return (
         <div className="min-h-screen">
-            {/* Top Image */}
-            <div className="relative h-[60vh] overflow-hidden">
+            {/* Back button */}
+            <div className="max-w-6xl mx-auto py-8 px-4">
+                <Button asChild variant="secondary" size="sm">
+                    <Link href="/programs">
+                        <ArrowLeft className="w-4 h-4" /> Back to Programs
+                    </Link>
+                </Button>
+            </div>
+
+            {/* Image tepadagi article oldida */}
+            <div className="max-w-5xl mx-auto mb-8 rounded-2xl overflow-hidden shadow-lg">
                 <Image
                     src={program.image || "/placeholder.svg"}
                     alt={title}
-                    fill
-                    className="object-cover"
+                    width={1200}
+                    height={600}
+                    className="object-cover rounded-2xl"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-                <div className="absolute top-8 left-4 md:left-8">
-                    <Button asChild variant="secondary" size="sm" className="gap-2">
-                        <Link href="/programs">
-                            <ArrowLeft className="w-4 h-4" /> Back to Programs
-                        </Link>
-                    </Button>
-                </div>
             </div>
 
             {/* Article */}
-            <article className="container mx-auto px-4 -mt-32 relative z-10">
+            <article className="container mx-auto px-4 relative z-10">
                 <div className="max-w-4xl mx-auto">
                     <div className="bg-card rounded-2xl p-8 md:p-12 shadow-2xl border border-border mb-12">
                         <div className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
