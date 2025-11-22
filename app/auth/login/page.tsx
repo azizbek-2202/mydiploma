@@ -6,15 +6,14 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Link from "next/link"
 import { loginUser } from "@/lib/api-user"
 import { useAuth } from "@/contexts/auth-context"
 
 export default function LoginPage() {
   const router = useRouter()
   const { login } = useAuth()
-  const [email, setEmail] = useState("mydiploma2025")
-  const [password, setPassword] = useState("K@ha5951")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -107,9 +106,6 @@ export default function LoginPage() {
 
           <p className="text-center mt-6 text-gray-600">
             Don't have an account?{" "}
-            <Link href="/auth/register" className="text-blue-600 hover:text-blue-700 font-semibold">
-              Register
-            </Link>
           </p>
         </div>
       </motion.div>

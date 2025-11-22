@@ -55,7 +55,6 @@ export const apiCall = async (
 
   try {
     const response = await fetch(url, options)
-console.log("REQUEST URL:", url)
 
     if (!response.ok) {
       throw new Error(`API Error: ${response.status} ${response.statusText}`)
