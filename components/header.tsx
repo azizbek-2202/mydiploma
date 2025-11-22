@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useLanguage } from "@/contexts/language-context"
 import { LanguageSwitcher } from "./language-switcher"
-import { ThemeSwitcher } from "./theme-switcher"
 import { Button } from "./ui/button"
 import { Menu, X } from "lucide-react"
 import { useState } from "react"
@@ -51,7 +50,6 @@ export function Header() {
           {/* Actions */}
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
-            <ThemeSwitcher />
 
             {/* Mobile Menu Button */}
             <Button
