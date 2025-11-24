@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { fetchBlogPostById } from "@/lib/api-blog";
-import { BlogPostClient } from "@/components/blog-post-client";
 import { useLanguage } from "@/contexts/language-context";
+import { BlogPostClient } from "@/components/blog-post-client";
 
 export default function BlogDetailsClient({ id }: { id: string }) {
     const [post, setPost] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const {locale} = useLanguage()
+    const { locale } = useLanguage();
 
     useEffect(() => {
         async function loadPost() {
@@ -27,19 +27,19 @@ export default function BlogDetailsClient({ id }: { id: string }) {
     if (!post) return <div>Post Not Found</div>;
 
     const translation =
-        post.translations?.find((t: any) => t.lang === locale) ||
+        post.translations?.find((t: any) => t.language === locale) ||
         post.translations?.[0];
 
     const title = translation?.title || "Untitled";
     const content = translation?.desc || "";
-    const category = "General";
+    const category = post.category || "General";
 
-    const formattedDate = post.createdAt
+    const formattedDate = post.date
         ? new Intl.DateTimeFormat("uz-UZ", {
             year: "numeric",
             month: "long",
             day: "numeric",
-        }).format(new Date(post.createdAt))
+        }).format(new Date(post.date))
         : "";
 
     return (
@@ -74,9 +74,7 @@ export default function BlogDetailsClient({ id }: { id: string }) {
                             {category}
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-balance">
-                            {title}
-                        </h1>
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6">{title}</h1>
 
                         <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-8">
                             <span>{formattedDate}</span>
