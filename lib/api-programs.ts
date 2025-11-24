@@ -59,7 +59,7 @@ export const createProgram = async (data: FormData) => {
   try {
     const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
 
-    const res = await fetch("http://138.68.93.19:3000/dasturlar", {
+    const res = await fetch("https://cansalting.fullstackchi.uz/dasturlar", {
       method: "POST",
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       body: data,

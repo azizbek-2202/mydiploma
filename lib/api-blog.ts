@@ -20,7 +20,7 @@ export interface BlogPost {
 ==================================================================== */
 export const fetchBlogPostsStatic = async (): Promise<BlogPost[]> => {
   try {
-    const res = await fetch("http://165.227.135.146:3000/blog", {
+    const res = await fetch("https://cansalting.fullstackchi.uz/blog", {
       cache: "force-cache",
     });
     if (!res.ok) return [];
@@ -46,7 +46,7 @@ export const fetchBlogPosts = async (): Promise<BlogPost[]> => {
 
 export const fetchBlogPostById = async (id: string): Promise<BlogPost | null> => {
   try {
-    const res = await fetch(`http://165.227.135.146:3000/blog/${id}`);
+    const res = await fetch(`https://cansalting.fullstackchi.uz/blog/${id}`);
     if (!res.ok) return null;
     return await res.json();
   } catch (err) {
