@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "https://fullcansalting-fullstackchi-production.up.railway.app/",
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "https://cansalting.fullstackchi.uz/",
   ENDPOINTS: {
     PROGRAMS: "dasturlar",
     GALLERY: "gallareya",
