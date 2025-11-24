@@ -13,6 +13,7 @@ export default function BlogPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState("All")
+  const [visibleCount, setVisibleCount] = useState(6) // 🔥 Added visible count
 
   const heroRef = useRef(null)
   const postsRef = useRef(null)
@@ -71,6 +72,9 @@ export default function BlogPage() {
       author?: string
     }>
 
+  // 🔥 Only show visible posts
+  const visiblePosts = filteredPosts.slice(0, visibleCount)
+
   const categories = ["All", "Study", "Visa", "Guides"]
 
   return (
@@ -101,7 +105,10 @@ export default function BlogPage() {
             <Button
               key={category}
               variant={selectedCategory === category ? "default" : "outline"}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => {
+                setSelectedCategory(category)
+                setVisibleCount(6) // 🔥 Reset count when category changes
+              }}
               className="whitespace-nowrap"
             >
               {category}
@@ -122,59 +129,75 @@ export default function BlogPage() {
               No posts found in this category.
             </p>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPosts.map((post, index) => (
-                <motion.article
-                  key={post.id}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={postsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  className="group"
-                >
-                  <Link href={`/blog/${post.id}`}>
-                    <div className="h-full rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl overflow-hidden">
-                      {post.image && (
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-48 object-cover"
-                        />
-                      )}
-
-                      <div className="p-6 space-y-4">
-                        <h2 className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-2">
-                          {post.title}
-                        </h2>
-
-                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                          {post.excerpt}
-                        </p>
-
-                        <div className="flex items-center gap-4 pt-4 border-t border-border text-xs text-muted-foreground">
-                          <span>
-                            {post.date && new Date(post.date).toLocaleDateString()}
-                          </span>
-                          <span>{post.readTime}</span>
-                        </div>
-
-                        {post.author && (
-                          <div className="flex items-center gap-2 mt-2">
-                            {post.userImage && (
-                              <img
-                                src={post.userImage}
-                                className="h-8 w-8 rounded-full object-cover"
-                                alt={post.author}
-                              />
-                            )}
-                            <span className="text-sm">{post.author}</span>
-                          </div>
+            <>
+              {/* Visible posts */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {visiblePosts.map((post, index) => (
+                  <motion.article
+                    key={post.id}
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={postsInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: index * 0.1, duration: 0.6 }}
+                    className="group"
+                  >
+                    <Link href={`/blog/${post.id}`}>
+                      <div className="h-full rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl overflow-hidden">
+                        {post.image && (
+                          <img
+                            src={post.image}
+                            alt={post.title}
+                            className="w-full h-48 object-cover"
+                          />
                         )}
+
+                        <div className="p-6 space-y-4">
+                          <h2 className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-2">
+                            {post.title}
+                          </h2>
+
+                          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                            {post.excerpt}
+                          </p>
+
+                          <div className="flex items-center gap-4 pt-4 border-t border-border text-xs text-muted-foreground">
+                            <span>
+                              {post.date && new Date(post.date).toLocaleDateString()}
+                            </span>
+                            <span>{post.readTime}</span>
+                          </div>
+
+                          {post.author && (
+                            <div className="flex items-center gap-2 mt-2">
+                              {post.userImage && (
+                                <img
+                                  src={post.userImage}
+                                  className="h-8 w-8 rounded-full object-cover"
+                                  alt={post.author}
+                                />
+                              )}
+                              <span className="text-sm">{post.author}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </motion.article>
-              ))}
-            </div>
+                    </Link>
+                  </motion.article>
+                ))}
+              </div>
+
+              {/* Load More Button */}
+              {visibleCount < filteredPosts.length && (
+                <div className="text-center mt-12">
+                  <Button
+                    onClick={() => setVisibleCount(prev => prev + 6)}
+                    size="lg"
+                    variant="outline"
+                  >
+                    Ko‘proq ko‘rish
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

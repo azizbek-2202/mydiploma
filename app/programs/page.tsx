@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { useLanguage } from "@/contexts/language-context"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ProgramsGrid } from "@/components/ProgramsGrid"
 import { SearchFilter } from "@/components/SearchFilter"
@@ -20,6 +19,8 @@ export default function ProgramsPage() {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCountry, setSelectedCountry] = useState("All")
+
+  const [visibleCount, setVisibleCount] = useState(6) // dastlab ko'rinadigan cardlar soni
 
   const heroRef = useRef(null)
   const programsRef = useRef(null)
@@ -45,7 +46,6 @@ export default function ProgramsPage() {
   // Filterlangan programs
   const filteredPrograms = programs
     .map((program) => {
-      // locale bo‘yicha tarjimani olish
       const translation = program.translations.find((tr) => tr.language === locale)
       return {
         ...program,
@@ -66,6 +66,14 @@ export default function ProgramsPage() {
 
       return matchesSearch && matchesCountry
     })
+
+  // Ko'rinadigan cardlar
+  const visiblePrograms = filteredPrograms.slice(0, visibleCount)
+
+  // Load more tugmasi
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 6)
+  }
 
   return (
     <div className="min-h-screen">
@@ -108,14 +116,26 @@ export default function ProgramsPage() {
         ) : filteredPrograms.length === 0 ? (
           <p className="text-center mt-20">No programs found.</p>
         ) : (
-          <ProgramsGrid
-            programs={filteredPrograms}
-            programsInView={programsInView}
-            clearFilters={() => {
-              setSearchQuery("")
-              setSelectedCountry("All")
-            }}
-          />
+          <>
+            <ProgramsGrid
+              programs={visiblePrograms} // faqat visiblePrograms ko‘rsatamiz
+              programsInView={programsInView}
+              clearFilters={() => {
+                setSearchQuery("")
+                setSelectedCountry("All")
+                setVisibleCount(6) // filter clear qilinganda dastlabki 6 ta card
+              }}
+            />
+
+            {/* Load More tugmasi */}
+            {visibleCount < filteredPrograms.length && (
+              <div className="text-center mt-8">
+                <Button onClick={handleLoadMore} size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                  Load More
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
 

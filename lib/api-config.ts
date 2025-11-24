@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://138.68.93.19:3000/",
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://165.227.135.146:3000/",
   ENDPOINTS: {
     PROGRAMS: "dasturlar",
     GALLERY: "gallareya",
