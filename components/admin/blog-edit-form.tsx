@@ -7,13 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { X } from "lucide-react";
 import { fetchBlogPostById, updateBlogPost } from "@/lib/api-blog";
 
 export default function BlogEditForm({ postId, onClose }: any) {
     const { toast } = useToast();
-    const [loading, setLoading] = useState(false);
 
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<any>(null);
 
     const fileRef = useRef<HTMLInputElement>(null);
@@ -22,21 +21,27 @@ export default function BlogEditForm({ postId, onClose }: any) {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [userImagePreview, setUserImagePreview] = useState<string | null>(null);
 
-    // LOAD DATA
+    // LOAD POST
     useEffect(() => {
-        if (!postId) return;
-        loadPost(postId);
+        if (postId) loadPost(postId);
     }, [postId]);
 
     const loadPost = async (id: string) => {
         const data = await fetchBlogPostById(id);
 
+        // hozirgi sana va vaqt
+        const now = new Date();
+        const autoDate = now.toISOString().split("T")[0]; // YYYY-MM-DD
+        const autoTime = now.toTimeString().split(" ")[0].slice(0,5); // HH:MM
+
         setFormData({
-            name: data.name,
+            name: data.name || "",
+            date: data.date || autoDate,
+            time: data.time || autoTime,
             translations: {
-                uz: data.translations.find((t: any) => t.lang === "uz"),
-                ru: data.translations.find((t: any) => t.lang === "ru"),
-                en: data.translations.find((t: any) => t.lang === "en"),
+                uz: data.translations.find((t: any) => t.lang === "uz") || {},
+                ru: data.translations.find((t: any) => t.lang === "ru") || {},
+                en: data.translations.find((t: any) => t.lang === "en") || {},
             },
             image: null,
             userImage: null,
@@ -56,14 +61,19 @@ export default function BlogEditForm({ postId, onClose }: any) {
             if (formData.userImage) form.append("userImage", formData.userImage);
 
             form.append("name", formData.name);
-            form.append("translations", JSON.stringify(Object.values(formData.translations)));
+            form.append("date", formData.date);
+            form.append("time", formData.time);
+
+            form.append("translations",
+                JSON.stringify(Object.values(formData.translations))
+            );
 
             await updateBlogPost(postId, form);
 
             toast({ title: "Updated", description: "Blog updated successfully!" });
             onClose();
         } catch (e) {
-            console.log(e);
+            console.error(e);
             toast({
                 title: "Xatolik",
                 description: "Update qilinmadi",
@@ -80,16 +90,14 @@ export default function BlogEditForm({ postId, onClose }: any) {
         <div className="container mx-auto max-w-4xl py-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold">
-                        ✏️ Blogni Tahrirlash
-                    </CardTitle>
+                    <CardTitle className="text-2xl font-bold">✏️ Blogni Tahrirlash</CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-6">
 
                     {/* Name */}
                     <div>
-                        <Label>Muallif ismi *</Label>
+                        <Label>Blog nomi *</Label>
                         <Input
                             value={formData.name}
                             onChange={(e) =>
@@ -98,21 +106,48 @@ export default function BlogEditForm({ postId, onClose }: any) {
                         />
                     </div>
 
+                    {/* DATE */}
+                    <div>
+                        <Label>Sana *</Label>
+                        <Input
+                            type="date"
+                            value={formData.date}
+                            onChange={(e) =>
+                                setFormData((p: any) => ({ ...p, date: e.target.value }))
+                            }
+                        />
+                    </div>
+
+                    {/* TIME */}
+                    <div>
+                        <Label>Vaqt *</Label>
+                        <Input
+                            type="time"
+                            value={formData.time}
+                            onChange={(e) =>
+                                setFormData((p: any) => ({ ...p, time: e.target.value }))
+                            }
+                        />
+                    </div>
+
                     {/* Translations */}
                     <div className="grid md:grid-cols-3 gap-4">
                         {(["uz", "ru", "en"] as const).map((lang) => (
-                            <div className="border rounded-lg p-4" key={lang}>
+                            <div key={lang} className="border rounded-lg p-4">
                                 <h3 className="font-bold uppercase mb-3">{lang}</h3>
 
                                 <Input
                                     placeholder="Title"
-                                    value={formData.translations[lang]?.title}
+                                    value={formData.translations[lang]?.title || ""}
                                     onChange={(e) =>
                                         setFormData((p: any) => ({
                                             ...p,
                                             translations: {
                                                 ...p.translations,
-                                                [lang]: { ...p.translations[lang], title: e.target.value },
+                                                [lang]: {
+                                                    ...p.translations[lang],
+                                                    title: e.target.value,
+                                                },
                                             },
                                         }))
                                     }
@@ -121,13 +156,54 @@ export default function BlogEditForm({ postId, onClose }: any) {
                                 <Textarea
                                     placeholder="Desc"
                                     className="mt-2 h-32 resize-none"
-                                    value={formData.translations[lang]?.desc}
+                                    value={formData.translations[lang]?.desc || ""}
                                     onChange={(e) =>
                                         setFormData((p: any) => ({
                                             ...p,
                                             translations: {
                                                 ...p.translations,
-                                                [lang]: { ...p.translations[lang], desc: e.target.value },
+                                                [lang]: {
+                                                    ...p.translations[lang],
+                                                    desc: e.target.value,
+                                                },
+                                            },
+                                        }))
+                                    }
+                                />
+
+                                <Input
+                                    placeholder="Rank"
+                                    type="number"
+                                    className="mt-2"
+                                    value={formData.translations[lang]?.rank || 0}
+                                    onChange={(e) =>
+                                        setFormData((p: any) => ({
+                                            ...p,
+                                            translations: {
+                                                ...p.translations,
+                                                [lang]: {
+                                                    ...p.translations[lang],
+                                                    rank: Number(e.target.value),
+                                                },
+                                            },
+                                        }))
+                                    }
+                                />
+
+                                <Input
+                                    placeholder="Create Day"
+                                    className="mt-2"
+                                    type="date"
+                                    value={formData.translations[lang]?.createDay || ""}
+                                    onChange={(e) =>
+                                        setFormData((p: any) => ({
+                                            ...p,
+                                            translations: {
+                                                ...p.translations,
+                                                [lang]: {
+                                                    ...p.translations[lang],
+                                                    createDay: e.target.value,
+                                                },
                                             },
                                         }))
                                     }

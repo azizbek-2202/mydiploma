@@ -113,8 +113,11 @@ export default function ProgramsForm() {
         {
           language: "uz",
           nomi: formData.translations.uz.nomi.trim(),
+          davomiyligi: formData.translations.uz.davomiyligi || "4 yil",
+          level: formData.translations.uz.level || "Bakalavr",
           davlat: formData.translations.uz.davlat.trim(),
           daraja: formData.translations.uz.daraja.trim(),
+          yonalishi: formData.translations.uz.yonalishi?.trim() || "",
           qita: formData.qita.trim(),
           desc: formData.translations.uz.desc.trim(),
           price: "5000$",
@@ -122,8 +125,11 @@ export default function ProgramsForm() {
         {
           language: "ru",
           nomi: formData.translations.ru.nomi.trim(),
+          davomiyligi: formData.translations.ru.davomiyligi || "4 yil",
+          level: formData.translations.ru.level || "Бакалавр",
           davlat: formData.translations.ru.davlat.trim(),
           daraja: formData.translations.ru.daraja.trim(),
+          yonalishi: formData.translations.ru.yonalishi?.trim() || "",
           qita: formData.qita.trim(),
           desc: formData.translations.ru.desc.trim(),
           price: "5000$",
@@ -131,8 +137,11 @@ export default function ProgramsForm() {
         {
           language: "en",
           nomi: formData.translations.en.nomi.trim(),
+          davomiyligi: formData.translations.en.davomiyligi || "4 years",
+          level: formData.translations.en.level || "Bachelor",
           davlat: formData.translations.en.davlat.trim(),
           daraja: formData.translations.en.daraja.trim(),
+          yonalishi: formData.translations.en.yonalishi?.trim() || "",
           qita: formData.qita.trim(),
           desc: formData.translations.en.desc.trim(),
           price: "5000$",
@@ -141,7 +150,7 @@ export default function ProgramsForm() {
 
       form.append("translations", JSON.stringify(translationsPayload))
 
-      
+
       const response = await createProgram(form)
 
       toast({ title: "Muvaffaqiyatli", description: "Dastur qo‘shildi!" })
@@ -219,12 +228,34 @@ export default function ProgramsForm() {
                     value={formData.translations[lang].daraja}
                     onChange={(e) => handleChange(lang, "daraja", e.target.value)}
                   />
+                  <Input
+                    placeholder="Davomiyligi"
+                    className="mt-2"
+                    value={formData.translations[lang].davomiyligi}
+                    onChange={(e) => handleChange(lang, "davomiyligi", e.target.value)}
+                  />
+
+                  <Input
+                    placeholder="Level"
+                    className="mt-2"
+                    value={formData.translations[lang].level}
+                    onChange={(e) => handleChange(lang, "level", e.target.value)}
+                  />
+
+                  <Input
+                    placeholder="Yonalishi"
+                    className="mt-2"
+                    value={formData.translations[lang].yonalishi}
+                    onChange={(e) => handleChange(lang, "yonalishi", e.target.value)}
+                  />
+
                   <Textarea
                     placeholder="Tavsif (desc)"
                     className="mt-2 resize-none h-32"
                     value={formData.translations[lang].desc}
                     onChange={(e) => handleChange(lang, "desc", e.target.value)}
                   />
+
                 </div>
               ))}
             </div>

@@ -68,7 +68,7 @@ export const createBlogPost = async (data: FormData) => {
 // Postni yangilash
 export const updateBlogPost = async (id: string, data: FormData) => {
   try {
-    return await apiCall("PATCH", "POSTS", id, data)
+    return await apiCall("PATCH", `blog/${id}`, undefined, data, undefined, true)
   } catch (error) {
     console.error("[API] Failed to update blog post:", error)
     throw error
